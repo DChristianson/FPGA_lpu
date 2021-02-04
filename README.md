@@ -51,13 +51,14 @@ Output
 
 ### Components
 
-Decoder - very simple CSV parser
+Decoder 
 * tests incoming byte
 * outputs whether the current input represents character to be written, a new field, a new row 
 * in the case of a quote or escape updates internal state for the next character
 
-RowCounter8x8 - 
-* interprets output of decoder into row number, field number and character address 
+RowCounter8x8 
+* converts output of decoder into row number, field number and character address 
+* used to load the row RAM as well as select the sum and matching fields
 
 Sum16
 * converts input byte(s) into integer and adds to 16 bit sum register
