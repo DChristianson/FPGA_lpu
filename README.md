@@ -8,9 +8,9 @@ Building a CSV parser in hardware. Practical use? Unlikely.
 
 ## Version Zero - HDL simulation
 
-The software used to define this chip is found in the nand2tetris project - see https://www.nand2tetris.org/software
+The software used to run this hardware simulation comes from the nand2tetris project - see https://www.nand2tetris.org/software
 
-LPU.hdl defines the main chop
+LPU.hdl defines the main chip.
 
 Capabilities:
 
