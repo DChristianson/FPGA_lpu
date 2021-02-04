@@ -33,16 +33,15 @@ Configuration
 * in[8], regload = 1, regaddress[16] sets up the LPU for parsing and processing
 * address space is divided into 16 12-bit blocks
 * the first 12 bit block (0x0000 to 0xFFF) holds control registers
-** ex: address 0 is r0
-** r0 - field delimiter
-** r1 - row delimiter
-** r2 - quote char
-** r3 - esc character
-** r4 - sum field 
-** r5 - match field
+  * r0 (0x0000) - field delimiter
+  * r1 (0x0001) - row delimiter
+  * r2 (0x0002) - quote char
+  * r3 (0x0003) - esc character
+  * r4 (0x0004) - sum field 
+  * r5 (0x0005) - match field
 * the second 12 bit block (0x1000 to 0x1FFF) holds matching ram
-** this space is subdivided into further 16 8-bit blocks representing 16 0-256 byte strings 
-** ex: 0x10 to 0x10FF if all loaded bytes match the field identified by r5, will output 1 on match[0]
+  * this space is subdivided into further 16 8-bit blocks representing 16 0-256 byte strings 
+  * ex: 0x1000 to 0x10FF if all loaded bytes match the field identified by r5, will output 1 on match[0]
 
 Output
 * 16 bit row counter
