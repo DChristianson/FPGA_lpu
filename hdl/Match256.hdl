@@ -1,0 +1,24 @@
+CHIP Match256 {
+
+    IN in[8], caddr[8], load, cmp, test;
+    OUT match;
+    
+    PARTS:
+    Or(a=load, b=cmp, out=loadCmp);
+
+    Byte256(in=in, load=load, inaddress=caddr, outaddress=caddr, out=cmpByte, out=strMatchDebug);
+    Byte(in=caddr, load=load, out=strLen);
+    
+    Or8Way(in=caddr, out=notAtStart);
+    Not(in=notAtStart, out=atStart);
+    Equals8(a=in, b=cmpByte, out=eq0);
+    Or(a=m0, b=atStart, out=priorMatchValue);
+    And(a=priorMatchValue, b=eq0, out=nextMatchValue);
+    Bit(in=nextMatchValue, load=loadCmp, out=m0, out=matchValue);    
+    Byte(in=caddr, load=cmp, out=strCmp);
+
+    Equals8(a=strLen, b=strCmp, out=comparedAllChars);
+    And(a=comparedAllChars, b=matchValue, out=strMatch);
+    And(a=test, b=strMatch, out=match);
+
+}

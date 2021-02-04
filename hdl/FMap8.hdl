@@ -1,0 +1,17 @@
+CHIP FMap8 {
+
+    IN in[8], caddr[8], load, cmp, test, sel[3];
+    OUT match[8];
+    
+    PARTS:
+    DMux8Way(in=load, sel=sel, a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7);
+
+    Match256(in=in, caddr=caddr, load=r0, cmp=cmp, test=test, match=match[0]);
+    Match256(in=in, caddr=caddr, load=r1, cmp=cmp, test=test, match=match[1]);
+    Match256(in=in, caddr=caddr, load=r2, cmp=cmp, test=test, match=match[2]);
+    Match256(in=in, caddr=caddr, load=r3, cmp=cmp, test=test, match=match[3]);
+    Match256(in=in, caddr=caddr, load=r4, cmp=cmp, test=test, match=match[4]);
+    Match256(in=in, caddr=caddr, load=r5, cmp=cmp, test=test, match=match[5]);
+    Match256(in=in, caddr=caddr, load=r6, cmp=cmp, test=test, match=match[6]);
+    Match256(in=in, caddr=caddr, load=r7, cmp=cmp, test=test, match=match[7]);
+}

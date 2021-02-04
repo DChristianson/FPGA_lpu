@@ -1,0 +1,11 @@
+CHIP FMap16 {
+
+    IN in[8], caddr[8], load, cmp, test, sel[4];
+    OUT match[16];
+    
+    PARTS:
+    DMux(in=load, sel=sel[3], a=l0, b=l1);
+    FMap8(in=in, caddr=caddr, load=l0, cmp=cmp, test=test, sel=sel[0..2], match=match[0..7]);
+    FMap8(in=in, caddr=caddr, load=l1, cmp=cmp, test=test, sel=sel[0..2], match=match[8..15]);
+    
+}

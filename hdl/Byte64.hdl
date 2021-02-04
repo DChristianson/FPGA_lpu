@@ -1,0 +1,16 @@
+CHIP Byte64 {
+    IN in[8], load, inaddress[6], outaddress[6];
+    OUT out[8];
+
+    PARTS:
+    DMux8Way(in=load, sel=inaddress[3..5], a=w0, b=w1, c=w2, d=w3, e=w4, f=w5, g=w6, h=w7);
+    Byte8(in=in, load=w0, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r0);
+    Byte8(in=in, load=w1, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r1);
+    Byte8(in=in, load=w2, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r2);
+    Byte8(in=in, load=w3, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r3);
+    Byte8(in=in, load=w4, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r4);
+    Byte8(in=in, load=w5, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r5);
+    Byte8(in=in, load=w6, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r6);
+    Byte8(in=in, load=w7, inaddress=inaddress[0..2], outaddress=outaddress[0..2], out=r7);
+    Mux8Way8(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=outaddress[3..5], out=out);
+}

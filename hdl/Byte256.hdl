@@ -1,0 +1,12 @@
+CHIP Byte256 {
+    IN in[8], load, inaddress[8], outaddress[8];
+    OUT out[8];
+
+    PARTS:
+    DMux4Way(in=load, sel=inaddress[6..7], a=w0, b=w1, c=w2, d=w3);
+    Byte64(in=in, load=w0, inaddress=inaddress[0..5], outaddress=outaddress[0..5], out=r0);
+    Byte64(in=in, load=w1, inaddress=inaddress[0..5], outaddress=outaddress[0..5], out=r1);
+    Byte64(in=in, load=w2, inaddress=inaddress[0..5], outaddress=outaddress[0..5], out=r2);
+    Byte64(in=in, load=w3, inaddress=inaddress[0..5], outaddress=outaddress[0..5], out=r3);
+    Mux4Way8(a=r0, b=r1, c=r2, d=r3, sel=outaddress[6..7], out=out);
+}

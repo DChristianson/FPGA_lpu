@@ -1,0 +1,17 @@
+CHIP AToI16 {
+
+    IN in[8], load, reset;
+    OUT out[16];
+    
+    PARTS:
+    Add16(a[0..7]=in, b[4]=true, b[6..15]=true, out=d1);
+
+    // x10
+    Add16(a[3..15]=l12, b[1..15]=l14, out=lx10);
+    Add16(a=lx10, b=d1, out=s1);
+
+    Mux16(a=s1, b=false, sel=reset, out=s2);
+    Or(a=load, b=reset, out=loadRegister);
+    Register(in=s2, load=loadRegister, out[0..12]=l12, out[0..14]=l14, out=out);
+
+}

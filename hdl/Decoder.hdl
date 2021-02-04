@@ -1,0 +1,58 @@
+
+/**
+ * csv decoder chip 
+ */
+
+CHIP Decoder {
+    IN in[8], field[8], row[8], quote[8], esc[8], load, reset;
+    OUT out[8], c, f, r;
+
+    PARTS:
+
+    // propositions
+    Equals8(a=in, b=row, out=rowP);
+    Equals8(a=in, b=field, out=fieldP);
+    Equals8(a=in, b=quote, out=quoteP);
+    Equals8(a=in, b=esc, out=escP);
+
+    // in escape status
+    Or(a=escP, b=inEscP, out=flipEscP);
+    And(a=load, b=flipEscP, out=loadEscP);
+    Or(a=loadEscP, b=reset, out=loadOrResetEscP);
+    Bit(in=nextEscValue, load=loadOrResetEscP, out=inEscP);
+    Not(in=inEscP, out=notInEscP);
+    Mux(a=notInEscP, b=false, sel=reset, out=nextEscValue);
+
+    // in quote status
+    And(a=quoteP, b=notInEscP, out=flipQuoteP);
+    And(a=load, b=flipQuoteP, out=loadQuoteP);
+    Or(a=loadQuoteP, b=reset, out=loadOrResetQuoteP);
+    Bit(in=nextQuoteValue, load=loadOrResetQuoteP, out=inQuoteP);
+    Not(in=inQuoteP, out=notInQuoteP);
+    Mux(a=notInQuoteP, b=false, sel=reset, out=nextQuoteValue);
+
+    // esc char map
+    Esc8(in=in, out=escChar);
+
+    // c = inescp or inquotep and not(fieldp or rowp);
+    Or(a=rowP, b=fieldP, out=delimP);
+    Or(a=inQuoteP, b=delimP, out=qfrP);
+    Not(in=qfrP, out=notQfrP);
+    Not(in=quoteP, out=notQuoteP);
+    And(a=inQuoteP, b=notQuoteP, out=quoteCharP);
+    Or(a=inEscP, b=quoteCharP, out=specialP);
+    Or(a=specialP, b=notQfrP, out=hasChar);
+    And(a=hasChar, b=load, out=c);
+
+    Not(in=specialP, out=notSpecialP);
+    // f = fieldP and not(inEscP or inQuoteP);
+    And(a=fieldP, b=notSpecialP, out=hasField);
+    And(a=hasField, b=load, out=f);
+    // r = rowp and not(inescp or inquotep);
+    And(a=rowP, b=notSpecialP, out=hasRow);
+    And(a=hasRow, b=load, out=r);
+
+    // output char
+    Mux8(a=in, b=escChar, sel=inEscP, out=out);
+
+}

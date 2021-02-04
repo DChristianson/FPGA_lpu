@@ -1,0 +1,16 @@
+/**
+ * Row tracks 256 fields of 256 bytes each
+ */
+
+CHIP RowCounter8x8 {
+
+    IN c, f, r, reset;
+    OUT rows[16], caddr[8], faddr[8];
+
+    PARTS:
+    Or(a=r, b=reset, out=resetField);
+    Or(a=f, b=resetField, out=resetChar);
+    PC8(inc=c, reset=resetChar, out=caddr); // char counter
+    PC8(inc=f, reset=resetField, out=faddr); // field counter
+    PC(inc=r, reset=reset, out=rows); // row counter
+}

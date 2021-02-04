@@ -1,0 +1,15 @@
+CHIP Sum16 {
+
+    IN in[8], load, inc, reset;
+    OUT out[16];
+    
+    PARTS:
+
+    Or(a=inc, b=reset, out=resetIncRegister);
+    AToI16(in=in, load=load, reset=resetIncRegister, out=incValue);
+
+    Add16(a=incValue, b=l1, out=s1);
+    Mux16(a=s1, b=false, sel=reset, out=s2);
+    Register(in=s2, load=resetIncRegister, out=l1, out=out);
+
+}

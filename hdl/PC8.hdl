@@ -1,0 +1,13 @@
+CHIP PC8 {
+    IN in[8],load,inc,reset;
+    OUT out[8];
+
+    PARTS:
+    Mux8(a=loop, b=loop1, sel=inc, out=c);
+    Mux8(a=c, b=in, sel=load, out=d);
+    Mux8(a=d, b=false, sel=reset, out=f);
+    Or(a=reset, b=load, out=rl);
+    Or(a=rl, b=inc, out=rli);
+    Byte(in=f, load=rli, out=loop, out=out);
+    Inc8(in=loop, out=loop1);
+}

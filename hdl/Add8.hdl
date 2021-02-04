@@ -1,0 +1,15 @@
+CHIP Add8 {
+    IN a[8], b[8], c;
+    OUT sum[8], carry;
+
+    PARTS:
+    FullAdder(a=a[0], b=b[0], c=c, sum=sum[0], carry=ca);
+    FullAdder(a=a[1], b=b[1], c=ca, sum=sum[1], carry=cb);
+    FullAdder(a=a[2], b=b[2], c=cb, sum=sum[2], carry=cc);
+    FullAdder(a=a[3], b=b[3], c=cc, sum=sum[3], carry=cd);
+    FullAdder(a=a[4], b=b[4], c=cd, sum=sum[4], carry=ce);
+    FullAdder(a=a[5], b=b[5], c=ce, sum=sum[5], carry=cf);
+    FullAdder(a=a[6], b=b[6], c=cf, sum=sum[6], carry=cg);
+    FullAdder(a=a[7], b=b[7], c=cg, sum=sum[7], carry=carry);
+
+}

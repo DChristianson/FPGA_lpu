@@ -1,0 +1,49 @@
+/**
+ * log processor chip
+ */
+
+CHIP LPU {
+    IN in[8], load, reset, regaddress[16], regload, outaddress[16];
+    OUT rows[16], out[8], sum[16], match[16];
+
+    PARTS:
+
+    // control registers, loaded using regload and regaddress[8] = 0
+    Not(in=regaddress[12], out=useControlRegister);
+    And(a=regload, b=useControlRegister, out=loadControlRegister);
+    DMux8Way(in=loadControlRegister, sel=regaddress[0..2], a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7);
+    Byte(in=in, load=r0, out=field); // field
+    Byte(in=in, load=r1, out=row); // row
+    Byte(in=in, load=r2, out=quote); // quote
+    Byte(in=in, load=r3, out=esc); // esc
+    Byte(in=in, load=r4, out=sumField); // field used for sums
+    Byte(in=in, load=r5, out=fmapField); // field used for frequency maps
+
+    // decoder
+    Decoder(in=in, field=field, row=row, quote=quote, esc=esc, load=load, reset=reset, out=nextByte, c=c, f=f, r=r);
+
+    // row counter
+    RowCounter8x8(c=c, f=f, r=r, reset=reset, rows=rows, faddr=faddr, caddr=caddr);
+    
+    // output row - stored as up to 256 fixed-width columns of 256 bytes each
+    Or(a=f, b=r, out=endChar);
+    Or(a=c, b=endChar, out=loadChar);
+    Mux8(a=nextByte, b=false, sel=endChar, out=nextChar); // write a 0 at end of field
+    Byte64K(in=nextChar, load=loadChar, inaddress[0..7]=caddr, inaddress[8..15]=faddr, outaddress=outaddress, out=out);
+
+    // accumulator chip will sum the integer values in the field indicated by register r4
+    Equals8(a=sumField, b=faddr, out=parsingSumField);
+    And(a=parsingSumField, b=c, out=loadSum);
+    And(a=parsingSumField, b=endChar, out=incSum);
+    Sum16(in=nextByte, load=loadSum, inc=incSum, reset=reset, out=sum);
+
+    // frequency mapper will signal the occurences of values in the field indicated by register r5
+    And(a=regload, b=regaddress[12], out=loadFMapRegister);
+    Equals8(a=fmapField, b=faddr, out=parsingFMapField);
+    And(a=parsingFMapField, b=c, out=cmpFMap);
+    And(a=parsingFMapField, b=endChar, out=testFMap);
+    Mux8(a=nextByte, b=in, sel=loadFMapRegister, out=fmapInByte);
+    Mux8(a=caddr, b=regaddress[0..7], sel=loadFMapRegister, out=fmapCaddr);
+    FMap16(in=fmapInByte, caddr=fmapCaddr, load=loadFMapRegister, cmp=cmpFMap, test=testFMap, sel=regaddress[8..11], match=match);
+
+}

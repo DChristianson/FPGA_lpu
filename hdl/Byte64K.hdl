@@ -1,0 +1,10 @@
+CHIP Byte64K {
+    IN in[8], load, inaddress[16], outaddress[16];
+    OUT out[8];
+
+    PARTS:
+    DMux(in=load, sel=inaddress[15], a=w0, b=w1);
+    Byte32K(in=in, load=w0, inaddress=inaddress[0..14], outaddress=outaddress[0..14], out=r0);
+    Byte32K(in=in, load=w1, inaddress=inaddress[0..14], outaddress=outaddress[0..14], out=r1);
+    Mux8(a=r0, b=r1, sel=outaddress[15], out=out);
+}
