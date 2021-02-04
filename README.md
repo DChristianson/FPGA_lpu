@@ -10,7 +10,9 @@ Building a CSV parser in hardware. Practical use? Unlikely.
 
 The software used to define this chip is found in the nand2tetris project - see https://www.nand2tetris.org/software
 
-LPU.hdl defines the "Log Processing Unit" which can do the following things:
+LPU.hdl defines the main chop
+
+Capabilities:
 
 * decode incoming serial CSV data while handle quoting and escape characters
 * write field data to memory at fixed 256 byte intervals (within each interval the field is represented as a null terminated string)
@@ -18,10 +20,11 @@ LPU.hdl defines the "Log Processing Unit" which can do the following things:
 * convert a column to a number and sum it
 * emit a row count
 
-Current limitations:
-* all sums and counters are 16 bit (seemed to be breaking the simulator trying to go higher)
-* proobably ought to handle CRLF
-* probably ought to handle EOF
+Limitations:
+
+* all sums and counters are 16 bit (was breaking the simulator a little bit trying to go higher)
+* no special handling for CRLF
+* no speical handling of EOF
 * only one field sum and one field match
 
 ### Interface
